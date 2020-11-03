@@ -99,6 +99,83 @@ create table idx_cols (
 
 ) engine=myisam;
 
+-- --------------------------------------------------------------------------------------------------------------------
+
+create table routes (
+
+  dbs_name   varchar(32) not null,
+  route_name varchar(32) not null,
+  route_path varchar(128) not null,
+  file_name  varchar(32) not null,
+  ins_at   timestamp not null default current_timestamp,
+  upd_at   timestamp not null default current_timestamp on update current_timestamp,
+
+  primary key (dbs_name,route__name)
+
+) engine=myisam;
+
+create table route_parms (
+
+  dbs_name         varchar(32) not null,
+  route_name       varchar(32) not null,
+  seq_in_route     integer not null auto_increment,
+  parm_name        varchar(32) not null,
+  parm_type        enum(
+    'integer','int','smallint','tinyint','mediumint','bigint',
+    'decimal','numeric','float','double','bit',
+    'date','datetime','timestamp','time','year',
+    'char','varchar','binary','varbinary',
+    'tinytext','text','mediumtext','longtext',
+    'tinyblob','blob','mediumblob','longblob',
+    'enum','set',
+    'json'
+  ) not null,
+  parm_length      integer,
+  parm_dec         integer,
+  parm_values      varchar(256),
+  parm_default     varchar(32),
+  parm_min_value   varchar(32),
+  parm_max_value   varchar(32),
+  parm_is_required boolean not null default false,
+
+  ins_at   timestamp not null default current_timestamp,
+  upd_at   timestamp not null default current_timestamp on update current_timestamp,
+
+  primary key (dbs_name,route__name,seq_in_route)
+
+) engine=myisam;
+
+-- --------------------------------------------------------------------------------------------------------------------
+
+create table menus (
+
+  dbs_name  varchar(32) not null,
+  menu_name varchar(32) not null,
+
+  ins_at   timestamp not null default current_timestamp,
+  upd_at   timestamp not null default current_timestamp on update current_timestamp,
+
+  primary key (dbs_name,menu__name)
+
+) engine=myisam;
+
+create table menu_items (
+
+  dbs_name    varchar(32) not null,
+  menu_name   varchar(32) not null,
+  seq_in_menu integer not null auto_increment,
+  item_name   varchar(32) not null,
+  route_name  varchar(32),
+
+  ins_at   timestamp not null default current_timestamp,
+  upd_at   timestamp not null default current_timestamp on update current_timestamp,
+
+  primary key (dbs_name,menu__name,seq_in_menu)
+
+) engine=myisam;
+
+-- --------------------------------------------------------------------------------------------------------------------
+
 create table aliases (
 
   dbs_name    varchar(32) not null,
@@ -114,3 +191,4 @@ create table aliases (
   key         (dbs_name,tbl_name_2,col_name_2,tbl_name_1,col_name_1)
 
 ) engine=myisam;
+
